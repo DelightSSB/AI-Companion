@@ -1,0 +1,26 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100dvh;
+    background: linear-gradient(121deg, rgba(238, 174, 202, 1) 0%, rgba(108, 141, 240, 1) 100%);
+}
+
+#chatbox {
+    width: 60%;                
+    max-width: 700px;          
+    height: 80%;               
+    background: white;
+    border: 5px solid #6b6969;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
+    padding: 20px;
+    overflow-y: auto;
+}
