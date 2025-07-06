@@ -10,9 +10,24 @@
     <div id="container">
         <!-- TODO: Design chatbox, try adding OpenAi to generic responses -->
         <div id="chatbox">
-            hello world :)
+            <div id="chat-log">
+                <div class="message ai">
+                    <!-- TODO: Allow for the user to crop image pfp's and not have it fit incorectly -->
+                    <div class="bubble">Hi! I'm your AI companion 💬</div>
+                    <img class="pfp ai" src="assets/yoru.jpg" />
+                </div>
+
+                <div class="message user">
+                    <div class="bubble">Hey there!</div>
+                    <img class="pfp user" src="assets/pheonix.jpg" />
+                </div>
+            </div>
+            <div id="chat-input">
+                <textarea type="text" id="user-input" placeholder="Send a message" ></textarea>
+            <button id="send-btn"><img src="assets/send icon.png" alt="send icon"></button>
+            </div>
+            </div>
         </div>
-    </div>
 </body>
 <script src="script.js"></script>
 </html>
