@@ -5,41 +5,61 @@ const textarea = document.getElementById("user-input");
 //Scroll to bottom after each message
 chatLog.scrollTop = chatLog.scrollHeight;
 
-textarea.addEventListener("keydown", (e) => {
+textarea.addEventListener("keydown", async (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault(); // prevent newline
+        e.preventDefault();
         const msg = textarea.value.trim();
         if (!msg) return;
-        addMessage("user", msg)
-    // Simulate AI reply
-    addMessage("ai", "typing");
 
-setTimeout(() => {
-  // Remove the typing bubble
-  const typingBubble = document.getElementById("typing-message");
-  if (typingBubble) typingBubble.remove();
+        addMessage("user", msg);
+        addMessage("ai", "typing");
 
-  // Add real AI reply
-  addMessage("ai", "I'm here for you ❤️");
-}, 6000);
+        try {
+        const res = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg })
+        });
+
+        const data = await res.json();
+
+        document.getElementById("typing-message")?.remove();
+        addMessage("ai", data.reply);
+        } catch (err) {
+        console.error("Error:", err);
+        document.getElementById("typing-message")?.remove();
+        addMessage("ai", "ERROR: Something went wrong with my response :(");
+        }
   }
 });
 
-sendBtn.addEventListener("click", () => {
-    const msg = textarea.value.trim();
-    if (!msg) return;
-    addMessage("user", msg);
-    // Simulate AI reply
-    addMessage("ai", "typing");
+sendBtn.addEventListener("click", async () => {
+  const msg = textarea.value.trim();
+  if (!msg) return;
 
-setTimeout(() => {
-  // Remove the typing bubble
-  const typingBubble = document.getElementById("typing-message");
-  if (typingBubble) typingBubble.remove();
+  addMessage("user", msg);
+  addMessage("ai", "typing");
 
-  // Add real AI reply
-  addMessage("ai", "I'm here for you ❤️");
-}, 1000);
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const data = await res.json();
+
+    // Remove the typing bubble
+    document.getElementById("typing-message")?.remove();
+
+    addMessage("ai", data.reply);
+  } catch (err) {
+    console.error("Error:", err);
+    const typingBubble = document.getElementById("typing-message");
+    if (typingBubble) typingBubble.remove();
+
+    addMessage("ai", "ERROR: Something went wrong with my response :(");
+  }
 });
 
 function addMessage(sender, msg) {

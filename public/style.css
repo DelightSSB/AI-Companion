@@ -13,7 +13,7 @@ html, body {
     background: linear-gradient(121deg, rgba(238, 174, 202, 1) 0%, rgba(108, 141, 240, 1) 100%);
 }
 
-#chatbox {
+#chatbox-container {
     width: 60%;                
     max-width: 700px;          
     height: 80%;               
