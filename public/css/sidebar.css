@@ -1,16 +1,16 @@
 #sidebar {
-  position: relative;
-  width: 250px;
-  background-color: #9F723C;
-  color: rgb(22, 22, 22);
-  transition: margin 0.3s;
-  overflow: hidden;
-  padding: 2rem 1.2rem;
-  margin: 2.5rem;
-  border: 5px solid #94BBE9;
-  transition: transform 0.3s ease-in-out;
-  border-radius: 20px;
-  position: relative; 
+    position: relative;
+    width: 250px;
+    background-color: #A087D9;
+    color: rgb(22, 22, 22);
+    transition: margin 0.3s;
+    overflow: hidden;
+    padding: 2rem 1.2rem;
+    margin: 2.5rem;
+    border: 5px solid #DBD6E5;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 20px;
+    position: relative; 
 }
 
 #new-chat{
@@ -28,32 +28,43 @@
 }
 
 #sidebar.collapsed #chat-list {
-  display: none;
+    display: none;
 
 }
 
 #toggle-btn {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1001;
-  background: none;
-  color: white;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background: none;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 #lst-title{
-  border-bottom: 2px dashed rgb(158, 158, 158);
+    font-size:x-large;
+    border-bottom: 2px dashed rgb(158, 158, 158);
 }
 
 #chat-list {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 #chat-list li {
-  margin: 10px 0;
+    font-size: large;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: .3rem;
+    border-radius: 20px;
+}
+
+#chat-list li:hover{
+    background-color: #493a6b;
+    color: aliceblue;
 }
 

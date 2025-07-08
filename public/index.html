@@ -27,46 +27,40 @@
         <!-- New Chat Modal -->
          <div id="modal-overlay" class="hidden">
             <div id="modal-new-chat">
-                <button id="close-modal" class="close-btn">✖</button>
-                <h1>Who Am I?</h1>
-                <input type="text" id="ai-name" placeholder="What's my name?"/>
-                <h3>Sex?</h3>
-                    <div class="sex-select">
-                        <label>
-                            <input type="radio" name="ai-sex" value="male" />
-                            <span class="bubble">Male</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="ai-sex" value="female" />
-                            <span class="bubble">Female</span>
-                        </label>
-                    </div>
-                <h3>Personality?</h3>
-                    <div id="personality-container">
-                        <div id="selected-personality" class="personality-box top"></div>
-                        <div id="available-personality" class="personality-box bottom">
+                <div id="modal-content-scroll">
+                    <button id="close-modal" class="close-btn">✖</button>
+                    <h1>Who Am I?</h1>
+                    <input type="text" id="ai-name" placeholder="What's my name?"/>
+                    <h3>Sex?</h3>
+                        <div class="sex-select">
+                            <label>
+                                <input type="radio" name="ai-sex" value="male" />
+                                <span class="bubble">Male</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="ai-sex" value="female" />
+                                <span class="bubble">Female</span>
+                            </label>
                         </div>
-                    </div>
-                <h3>Profile Picture</h3>
-                    <div id="image-upload-section">
-                        <input type="file" id="profile-img-input" accept="image/*" />
+                    <h3>Personality?</h3>
+                        <div id="personality-container">
+                            <div id="selected-personality" class="personality-box top"></div>
+                            <div id="available-personality" class="personality-box bottom">
+                            </div>
+                        </div>
+                    <h3>Profile Picture</h3>
+                        <div id="image-upload-section">
+                            <input type="file" id="profile-img-input" accept="image/*" />
 
-                        <div id="crop-area">
-                            <div class="crop-frame"></div>
-                            <img id="profile-img-preview" />
+                            <img id="profile-img-preview" style="max-width: 100px; border-radius: 50%; display: none;" />
                         </div>
-
-                        <div id="crop-controls">
-                            <button id="select-btn">OK</button>
-                            <button id="reset-btn">Reset</button>
-                        </div>
+                        <button id="create">Create</button>
                     </div>
-                    <button id="create">Create</button>
             </div>
          </div>
 
         <!-- Chat screen -->
-        <div id="chat-screen">
+        <div id="chat-screen" class="hidden">
             <div id="chatbox-container">
                 <div id="chat-log">
                     <div class="message ai">

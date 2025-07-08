@@ -95,21 +95,10 @@ function moveToAvailable(tag) {
 
 
 // Image previewer for profile picture selector
-let img = document.getElementById("profile-img-preview");
-let input = document.getElementById("profile-img-input");
-let resetBtn = document.getElementById("reset-btn");
-const selectBtn = document.getElementById("select-btn");
-
-let scale = 1;
-let offsetX = 0;
-let offsetY = 0;
-let isDragging = false;
-let startX, startY;
+const previewImg = document.getElementById("profile-img-preview");
+const input = document.getElementById("profile-img-input");
 let selectedProfilePic = {
-  src: "",
-  offsetX: 0,
-  offsetY: 0,
-  scale: 1
+  src: ""
 };
 
 input.addEventListener("change", (e) => {
@@ -118,104 +107,110 @@ input.addEventListener("change", (e) => {
 
   const reader = new FileReader();
   reader.onload = function (event) {
-    img.src = event.target.result;
-    img.setAttribute("draggable", false);
-    img.onload = () => {
-      scale = 1;
-      offsetX = 0;
-      offsetY = 0;
-      updateTransform();
+    const tempImg = new Image();
+    tempImg.onload = () => {
+      if (tempImg.width !== tempImg.height) {
+        alert("Please upload a square image (equal width and height).");
+        input.value = "";
+        previewImg.style.display = "none";
+        selectedProfilePic.src = "";
+      } else {
+        previewImg.src = event.target.result;
+        previewImg.style.display = "block";
+        selectedProfilePic.src = event.target.result;
+      }
     };
+    tempImg.src = event.target.result;
   };
   reader.readAsDataURL(file);
 });
 
+//Create button pressed, new chat created
+const createBtn = document.getElementById("create");
+const chatScreen = document.getElementById("chat-screen");
+const chatList = document.getElementById("chat-list");
+const aiNameInput = document.getElementById("ai-name");
 
-img.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  startX = e.clientX - offsetX;
-  startY = e.clientY - offsetY;
-});
+createBtn.addEventListener("click", () => {
+  const aiName = aiNameInput.value.trim();
+  const hasName = aiName.length > 0;
+  const hasPersonality = selectedPersonality.length > 0;
+  const hasProfilePic = selectedProfilePic.src !== "";
 
-document.addEventListener("mouseup", () => isDragging = false);
-
-document.addEventListener("mousemove", (e) => {
-  if (isDragging) {
-    offsetX = e.clientX - startX;
-    offsetY = e.clientY - startY;
-    updateTransform();
+  if (!hasName || !hasPersonality || !hasProfilePic) {
+    alert("Please fill out all fields before creating the chat.");
+    return;
   }
+
+  // Add to chat list in sidebar
+  const newLi = document.createElement("li");
+  newLi.textContent = aiName;
+  chatList.appendChild(newLi);
+
+  //Show name
+  const box = document.getElementById("chatbox-container")
+  const title = document.createElement("h2")
+  title.innerHTML = aiName;
+
+  box.prepend(title)
+
+  // Show chat screen and hide modal
+  modalOverlay.classList.add("hidden");
+  chatScreen.classList.remove("hidden");
+
+  // Clear previous messages and reset
+  chatLog.innerHTML = "";
+
+  // Add hardcoded intro message from the AI
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", "ai");
+
+  const bubble = document.createElement("div");
+  bubble.classList.add("bubble");
+  bubble.textContent = "Ask me anything!";
+
+  const img = document.createElement("img");
+  img.classList.add("pfp", "ai");
+  img.src = selectedProfilePic.src;
+  img.style.width = "40px";
+  img.style.height = "40px";
+
+
+  msgDiv.appendChild(bubble);
+  msgDiv.appendChild(img);
+  chatLog.appendChild(msgDiv);
+
+  chatLog.scrollTop = chatLog.scrollHeight;
+
+
+  resetModal();
 });
 
-img.addEventListener("wheel", (e) => {
-  e.preventDefault();
-  const zoom = e.deltaY > 0 ? -0.05 : 0.05;
-  scale = Math.min(Math.max(scale + zoom, 0.5), 3);
-  updateTransform();
-});
+//Helper to reset modal fields
+function resetModal() {
+  aiNameInput.value = "";
+  selectedPersonality = [];
+  selectedBox.innerHTML = "";
+  availableBox.innerHTML = "";
+  personalityTags.forEach(tag => {
+    const span = document.createElement("span");
+    span.className = "personality-tag";
+    span.textContent = tag;
+    availableBox.appendChild(span);
+  });
 
-function updateTransform() {
-  const cropArea = document.getElementById("crop-area");
-  const frameSize = 150;
-  const cropWidth = cropArea.offsetWidth;
-  const cropHeight = cropArea.offsetHeight;
-
-  const imgWidth = img.naturalWidth * scale;
-  const imgHeight = img.naturalHeight * scale;
-
-  const minX = cropWidth / 2 - (imgWidth - frameSize) / 2;
-  const maxX = cropWidth / 2 + (imgWidth - frameSize) / 2;
-  const minY = cropHeight / 2 - (imgHeight - frameSize) / 2;
-  const maxY = cropHeight / 2 + (imgHeight - frameSize) / 2;
-
-  offsetX = Math.min(Math.max(offsetX, cropWidth / 2 - imgWidth + frameSize / 2), cropWidth / 2 - frameSize / 2);
-  offsetY = Math.min(Math.max(offsetY, cropHeight / 2 - imgHeight + frameSize / 2), cropHeight / 2 - frameSize / 2);
-
-
-  img.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-}
-
-resetBtn.addEventListener("click", () => {
-  offsetX = 0;
-  offsetY = 0;
-  scale = 1;
-  updateTransform();
-});
-
-selectBtn.addEventListener("click", () => {
-  if (!img.src) return;
-
+  img.src = "";
   selectedProfilePic = {
-    src: img.src,
-    offsetX,
-    offsetY,
-    scale
+    src: "",
+    offsetX: 0,
+    offsetY: 0,
+    scale: 1
   };
 
-  console.log("✅ Profile picture selected:", selectedProfilePic);
+  selectBtn.disabled = false;
+  selectBtn.textContent = "OK";
+}
 
-  // Optionally: show a green checkmark, or disable selection
-  selectBtn.textContent = "Selected!";
-  selectBtn.disabled = true;
-});
-
-// cropBtn.addEventListener("click", () => {
-//   const cropBox = document.querySelector(".crop-frame").getBoundingClientRect();
-//   const imgBox = img.getBoundingClientRect();
-
-//   const canvas = document.createElement("canvas");
-//   canvas.width = cropBox.width;
-//   canvas.height = cropBox.height;
-//   const ctx = canvas.getContext("2d");
-
-//   const sx = (cropBox.left - imgBox.left) / scale;
-//   const sy = (cropBox.top - imgBox.top) / scale;
-
-//   ctx.drawImage(img, sx, sy, cropBox.width / scale, cropBox.height / scale, 0, 0, canvas.width, canvas.height);
-
-//   img.src = canvas.toDataURL("image/png");
-//   resetBtn.disabled = true;
-// });
 
 
 //Scroll to bottom after each message
@@ -280,6 +275,7 @@ sendBtn.addEventListener("click", async () => {
   }
 });
 
+//TODO: Add img parameter so the pfp stays consistent
 function addMessage(sender, msg) {
   if (sender === "ai" && msg === "typing") {
 
