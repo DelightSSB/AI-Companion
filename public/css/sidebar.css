@@ -1,0 +1,59 @@
+#sidebar {
+  position: relative;
+  width: 250px;
+  background-color: #9F723C;
+  color: rgb(22, 22, 22);
+  transition: margin 0.3s;
+  overflow: hidden;
+  padding: 2rem 1.2rem;
+  margin: 2.5rem;
+  border: 5px solid #94BBE9;
+  transition: transform 0.3s ease-in-out;
+  border-radius: 20px;
+  position: relative; 
+}
+
+#new-chat{
+    border: 3px solid gray;
+    border-radius: 20px;
+    font-size: larger;
+    width: 70%;
+    padding: .6rem;  
+    margin: 1rem auto;
+    cursor: pointer;
+}
+
+#sidebar.collapsed{
+    transform: translateX(-120%);
+}
+
+#sidebar.collapsed #chat-list {
+  display: none;
+
+}
+
+#toggle-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1001;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#lst-title{
+  border-bottom: 2px dashed rgb(158, 158, 158);
+}
+
+#chat-list {
+  list-style: none;
+  padding: 0;
+}
+
+#chat-list li {
+  margin: 10px 0;
+}
+

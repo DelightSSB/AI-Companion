@@ -1,0 +1,180 @@
+
+/* Overlay background */
+#modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+
+.hidden {
+  display: none !important;
+}
+
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+#modal-new-chat{
+    background-color: #6c63ff;
+    border: 3px solid rgb(202, 202, 94);
+    border-radius: 20px;
+    padding: 2rem ;
+    width: 60%;
+    height: 60%;
+    overflow-y: scroll;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+}
+
+#modal-new-chat h1 {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+#ai-name{
+    border: 3px solid gray;
+    border-radius: 20px;
+    font-size: larger;
+    padding: 1rem;
+}
+
+.sex-select {
+  display: flex;
+  gap: 10px;
+}
+
+.sex-select input[type="radio"] {
+  display: none;
+}
+
+.sex-select .bubble {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 2px solid #aaa;
+  cursor: pointer;
+  background-color: white;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+/* Selected style */
+.sex-select input[type="radio"]:checked + .bubble {
+  background-color: #7900ca;
+  color: white;
+  border-color: #6c63ff;
+}
+
+#personality-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.personality-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  background: #f1f1f1;
+  border-radius: 12px;
+  min-height: 20px;
+}
+
+.personality-tag {
+  background-color: #d8d1ff;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.personality-tag:hover {
+  background-color: #7900ca;
+  color: white;
+}
+
+
+.personality-tag.selected::after {
+  content: "✖";
+  font-size: 12px;
+  color: #444;
+  margin-left: 8px;
+}
+
+#crop-area {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+
+
+.crop-frame {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  top: 50%;
+  left: 50%;
+  border: 4px dashed #ffffff;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+#crop-controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+#profile-img-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  cursor: move;
+}
+
+#profile-img-preview {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#create{
+    border: 3px solid gray;
+    border-radius: 20px;
+    font-size: larger;
+    width: 30%;
+    padding: .6rem;  
+    margin: 1rem auto;
+    cursor: pointer;
+}

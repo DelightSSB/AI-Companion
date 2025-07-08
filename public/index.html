@@ -5,29 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/modal.css" />
+    <link rel="stylesheet" href="css/chatbox.css" />
+    <link href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
 </head>
 <body>
     <div id="container">
-        <!-- TODO: Design chatbox, try adding OpenAi to generic responses -->
-        <div id="chatbox-container">
-            <div id="chat-log">
-                <div class="message ai">
-                    <!-- TODO: Allow for the user to crop image pfp's and not have it fit incorectly -->
-                    <div class="bubble">Hi! I'm your AI companion 💬</div>
-                    <img class="pfp ai" src="assets/yoru.jpg" />
-                </div>
+        <!-- sidebar -->
+        <button id="toggle-btn">☰</button>
+        <div id="sidebar">
+            <h2>My AI Heart</h2>
+            <button id="new-chat">New Chat</button>
+            <h3 id="lst-title">Lovers</h3>
+            <ul id="chat-list">
+            <li>Chat 1</li>
+            <li>Chat 2</li>
+            </ul>
+        </div>
 
-                <div class="message user">
-                    <div class="bubble">Hey there!</div>
-                    <img class="pfp user" src="assets/pheonix.jpg" />
+        <!-- New Chat Modal -->
+         <div id="modal-overlay" class="hidden">
+            <div id="modal-new-chat">
+                <button id="close-modal" class="close-btn">✖</button>
+                <h1>Who Am I?</h1>
+                <input type="text" id="ai-name" placeholder="What's my name?"/>
+                <h3>Sex?</h3>
+                    <div class="sex-select">
+                        <label>
+                            <input type="radio" name="ai-sex" value="male" />
+                            <span class="bubble">Male</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="ai-sex" value="female" />
+                            <span class="bubble">Female</span>
+                        </label>
+                    </div>
+                <h3>Personality?</h3>
+                    <div id="personality-container">
+                        <div id="selected-personality" class="personality-box top"></div>
+                        <div id="available-personality" class="personality-box bottom">
+                        </div>
+                    </div>
+                <h3>Profile Picture</h3>
+                    <div id="image-upload-section">
+                        <input type="file" id="profile-img-input" accept="image/*" />
+
+                        <div id="crop-area">
+                            <div class="crop-frame"></div>
+                            <img id="profile-img-preview" />
+                        </div>
+
+                        <div id="crop-controls">
+                            <button id="select-btn">OK</button>
+                            <button id="reset-btn">Reset</button>
+                        </div>
+                    </div>
+                    <button id="create">Create</button>
+            </div>
+         </div>
+
+        <!-- Chat screen -->
+        <div id="chat-screen">
+            <div id="chatbox-container">
+                <div id="chat-log">
+                    <div class="message ai">
+                        <!-- TODO: Allow for the user to crop image pfp's and not have it fit incorectly -->
+                        <div class="bubble">Hi! I'm your AI companion 💬</div>
+                        <img class="pfp ai" src="assets/yoru.jpg" />
+                    </div>
+
+                    <div class="message user">
+                        <div class="bubble">Hey there!</div>
+                        <img class="pfp user" src="assets/pheonix.jpg" />
+                    </div>
                 </div>
-            </div>
-            <div id="chat-input">
-                <textarea type="text" id="user-input" placeholder="Send a message" ></textarea>
-            <button id="send-btn"><img src="assets/send icon.png" alt="send icon"></button>
-            </div>
+                <div id="chat-input">
+                    <textarea type="text" id="user-input" placeholder="Send a message" ></textarea>
+                <button id="send-btn"><img src="assets/send icon.png" alt="send icon"></button>
+                </div>
             </div>
         </div>
+    </div>
 </body>
 <script src="script.js"></script>
+<script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
 </html>
