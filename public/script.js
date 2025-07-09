@@ -131,13 +131,14 @@ const chatScreen = document.getElementById("chat-screen");
 const chatList = document.getElementById("chat-list");
 const aiNameInput = document.getElementById("ai-name");
 
-createBtn.addEventListener("click", () => {
+createBtn.addEventListener("click", async () => {
   const aiName = aiNameInput.value.trim();
   const hasName = aiName.length > 0;
   const hasPersonality = selectedPersonality.length > 0;
   const hasProfilePic = selectedProfilePic.src !== "";
+  const selectedSex = document.querySelector('input[name="ai-sex"]:checked')?.value || "";
 
-  if (!hasName || !hasPersonality || !hasProfilePic) {
+  if (!hasName || !hasPersonality || !hasProfilePic || !selectedSex) {
     alert("Please fill out all fields before creating the chat.");
     return;
   }
@@ -160,28 +161,81 @@ createBtn.addEventListener("click", () => {
 
   // Clear previous messages and reset
   chatLog.innerHTML = "";
+  // Add typing message while waiting for DB confirmation
+
+  // Add typing message while waiting for DB confirmation
+addMessage("ai", "typing", selectedProfilePic.src);
+
+const newChat = {
+  name: aiName,
+  personalityTraits: selectedPersonality,
+  profilePic: selectedProfilePic.src,
+  sex: selectedSex,
+  messages: []
+};
+
+try {
+  const res = await fetch("/chat/new", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newChat)
+  });
+
+  const data = await res.json();
+
+  // Replace typing with actual message
+  document.getElementById("typing-message")?.remove();
+  addMessage("ai", "Ask me anything!", selectedProfilePic.src);
+  console.log("✅ Chat saved:", data);
+} catch (err) {
+  console.error("❌ Failed to save chat:", err);
+  document.getElementById("typing-message")?.remove();
+  addMessage("ai", "ERROR: Something went wrong while creating the chat.", selectedProfilePic.src);
+}
+
 
   // Add hardcoded intro message from the AI
-  const msgDiv = document.createElement("div");
-  msgDiv.classList.add("message", "ai");
+  // const msgDiv = document.createElement("div");
+  // msgDiv.classList.add("message", "ai");
 
-  const bubble = document.createElement("div");
-  bubble.classList.add("bubble");
-  bubble.textContent = "Ask me anything!";
+  // const bubble = document.createElement("div");
+  // bubble.classList.add("bubble");
+  // bubble.textContent = "Ask me anything!";
 
-  const img = document.createElement("img");
-  img.classList.add("pfp", "ai");
-  img.src = selectedProfilePic.src;
-  img.style.width = "40px";
-  img.style.height = "40px";
+  // const img = document.createElement("img");
+  // img.classList.add("pfp", "ai");
+  // img.src = selectedProfilePic.src;
+  // img.style.width = "40px";
+  // img.style.height = "40px";
 
 
-  msgDiv.appendChild(bubble);
-  msgDiv.appendChild(img);
-  chatLog.appendChild(msgDiv);
+  // msgDiv.appendChild(bubble);
+  // msgDiv.appendChild(img);
+  // chatLog.appendChild(msgDiv);
 
-  chatLog.scrollTop = chatLog.scrollHeight;
+  // chatLog.scrollTop = chatLog.scrollHeight;
 
+//   const newChat = {
+//   name: aiName,
+//   personalityTraits: selectedPersonality,
+//   profilePic: selectedProfilePic.src,
+//   messages: [
+//     { role: "assistant", content: "Ask me anything!" }
+//   ]
+// };
+
+// try {
+//   const res = await fetch("/chat/new", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(newChat)
+//   });
+
+//   const data = await res.json();
+//   console.log("✅ Chat saved:", data);
+// } catch (err) {
+//   console.error("❌ Failed to save chat:", err);
+// }
 
   resetModal();
 });
@@ -235,6 +289,7 @@ textarea.addEventListener("keydown", async (e) => {
         });
 
         const data = await res.json();
+        console.log("Chat created and saved to mongo" + data._id)
 
         document.getElementById("typing-message")?.remove();
         addMessage("ai", data.reply);
@@ -276,10 +331,8 @@ sendBtn.addEventListener("click", async () => {
 });
 
 //TODO: Add img parameter so the pfp stays consistent
-function addMessage(sender, msg) {
+function addMessage(sender, msg, pfp = null) {
   if (sender === "ai" && msg === "typing") {
-
-    // Insert typing animation bubble
     const msgDiv = document.createElement("div");
     msgDiv.classList.add("message", "ai");
     msgDiv.id = "typing-message";
@@ -290,36 +343,79 @@ function addMessage(sender, msg) {
 
     const img = document.createElement("img");
     img.classList.add("pfp", "ai");
-    img.src = "assets/yoru.jpg";
+    img.src = pfp || "assets/yoru.jpg"; // fallback
 
     msgDiv.appendChild(bubble);
     msgDiv.appendChild(img);
     chatLog.appendChild(msgDiv);
-
     chatLog.scrollTop = chatLog.scrollHeight;
+  } else {
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("message", sender);
+
+    const bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    bubble.textContent = msg;
+
+    const img = document.createElement("img");
+    img.classList.add("pfp", sender);
+    img.src = sender === "user"
+      ? "assets/pheonix.jpg"
+      : pfp || "assets/yoru.jpg";
+
+    msgDiv.appendChild(bubble);
+    msgDiv.appendChild(img);
+    chatLog.appendChild(msgDiv);
+    chatLog.scrollTop = chatLog.scrollHeight;
+    textarea.value = "";
+    textarea.style.height = "auto";
   }
-  else{
-    // Normal message rendering
-  const msgDiv = document.createElement("div");
-  msgDiv.classList.add("message", sender);
-
-  const bubble = document.createElement("div");
-  bubble.classList.add("bubble");
-  bubble.textContent = msg;
-
-  const img = document.createElement("img");
-  img.classList.add("pfp", sender);
-  img.src = sender === "user" ? "assets/pheonix.jpg" : "assets/yoru.jpg";
-
-  msgDiv.appendChild(bubble);
-  msgDiv.appendChild(img);
-  chatLog.appendChild(msgDiv);
-
-  chatLog.scrollTop = chatLog.scrollHeight;
-  textarea.value = "";
-  textarea.style.height = "auto";
 }
-}
+
+// function addMessage(sender, msg) {
+//   if (sender === "ai" && msg === "typing") {
+
+//     // Insert typing animation bubble
+//     const msgDiv = document.createElement("div");
+//     msgDiv.classList.add("message", "ai");
+//     msgDiv.id = "typing-message";
+
+//     const bubble = document.createElement("div");
+//     bubble.classList.add("bubble", "typing-dots");
+//     bubble.innerHTML = "<span></span><span></span><span></span>";
+
+//     const img = document.createElement("img");
+//     img.classList.add("pfp", "ai");
+//     img.src = "assets/yoru.jpg";
+
+//     msgDiv.appendChild(bubble);
+//     msgDiv.appendChild(img);
+//     chatLog.appendChild(msgDiv);
+
+//     chatLog.scrollTop = chatLog.scrollHeight;
+//   }
+//   else{
+//     // Normal message rendering
+//   const msgDiv = document.createElement("div");
+//   msgDiv.classList.add("message", sender);
+
+//   const bubble = document.createElement("div");
+//   bubble.classList.add("bubble");
+//   bubble.textContent = msg;
+
+//   const img = document.createElement("img");
+//   img.classList.add("pfp", sender);
+//   img.src = sender === "user" ? "assets/pheonix.jpg" : "assets/yoru.jpg";
+
+//   msgDiv.appendChild(bubble);
+//   msgDiv.appendChild(img);
+//   chatLog.appendChild(msgDiv);
+
+//   chatLog.scrollTop = chatLog.scrollHeight;
+//   textarea.value = "";
+//   textarea.style.height = "auto";
+// }
+// }
 
 //Text input area grows to a limit
 textarea.addEventListener("input", () => {
