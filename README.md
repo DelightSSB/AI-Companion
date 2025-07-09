@@ -66,13 +66,13 @@ If both the api key worked and mongodb connected you should see the terminal say
 ### 5. View the application
 To view the application, paste http://localhost:3000 into your browser
 
-##Notes
-- You MUSR have Node.js and npm installed.
+## Notes
+- You MUST have Node.js and npm installed.
 - This app currently stores chat objects, but does not persist message history between sessions yet.
 - The app does not yet use authentication — all chats are anonymous and local.
 
-  LICENSE - MIT
+LICENSE - MIT
 
-  #Author
-  Created by JaZir Monté Simon
+#Author
+Created by JaZir Monté Simon
 
