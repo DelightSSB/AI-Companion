@@ -51,8 +51,8 @@ To make the backend work you MUST use your own openAI and MongoDB Atlas cluster 
 - First create a mongodb account
 - Allow mongo to create your organization
 - Create and name your cluster
-- In that cluster hit connect, choose drivers, and follow until you see the connection string. (It should look something like this: mongodb+srv://<username>:<db_password>@companion-ai.sklfvrp.mongodb.net/?retryWrites=true&w=majority&appName=Companion-AI)
-- Don't forget to replace <username> and <db_password> with your own cluster's username and password that you use to access the database.
+- In that cluster hit connect, choose drivers, and follow until you see the connection string. (It should look something like this: mongodb+srv://*username*:*db_password*@companion-ai.sklfvrp.mongodb.net/?retryWrites=true&w=majority&appName=Companion-AI)
+- Don't forget to replace *username* and *db_password* with your own cluster's username and password that you use to access the database.
 - Paste the connection string into the .env file and assign it to MONGODB_URI
 - (do NOT include any spaces next to the =)
 
