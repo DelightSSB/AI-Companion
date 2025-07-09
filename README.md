@@ -44,15 +44,17 @@ MONGODB_URI=your_mongodb_uri_here
 
 To make the backend work you MUST use your own openAI and MongoDB Atlas cluster and collection. I will not provide one for you.
 #### You can set up and receive and openAI API key here: https://platform.openai.com/api-keys
-- Once created and you received your key, paste it into the .env file and assign it to OPENAI_API_KEY (do NOT include any spaces next to the =)
+- Once created and you received your key, paste it into the .env file and assign it to OPENAI_API_KEY
+- (do NOT include any spaces next to the =)
 
-####You can setup a mongoDB cluster here: https://www.mongodb.com/
+#### You can setup a mongoDB cluster here: https://www.mongodb.com/
 - First create a mongodb account
 - Allow mongo to create your organization
 - Create and name your cluster
 - In that cluster hit connect, choose drivers, and follow until you see the connection string. (It should look something like this: mongodb+srv://<username>:<db_password>@companion-ai.sklfvrp.mongodb.net/?retryWrites=true&w=majority&appName=Companion-AI)
 - Don't forget to replace <username> and <db_password> with your own cluster's username and password that you use to access the database.
-- Paste the connection string into the .env file and assign it to MONGODB_URI (do NOT include any spaces next to the =)
+- Paste the connection string into the .env file and assign it to MONGODB_URI
+- (do NOT include any spaces next to the =)
 
   
 ### 4. Run the server
