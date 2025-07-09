@@ -73,6 +73,6 @@ To view the application, paste http://localhost:3000 into your browser
 
 LICENSE - MIT
 
-#Author
+# Author
 Created by JaZir Monté Simon
 
