@@ -69,7 +69,13 @@ To view the application, paste http://localhost:3000 into your browser
 ## Notes
 - You MUST have Node.js and npm installed.
 - This app currently stores chat objects, but does not persist message history between sessions yet.
+- While the AI is connected and will give a response. It currently does not have context that is taken from the popup modal. It doesn't have personality yet.
 - The app does not yet use authentication — all chats are anonymous and local.
+
+## CURRENT KNOWN ISSUES
+- Issues with formatting the user message when message gets too long
+- AI response profile picture changes to default picture when it responds (This is due to lack of ai context)
+- Sidebar chat selection is not implemented yet.
 
 LICENSE - MIT
 
