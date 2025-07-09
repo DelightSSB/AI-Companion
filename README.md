@@ -61,7 +61,7 @@ To make the backend work you MUST use your own openAI and MongoDB Atlas cluster 
 ```bash
 node server/server.js
 ```
-If both the api key worked and mongodb connected you should see the terminal say "Started on localhost:3000" and "MongoDB connected"
+If both the api key worked and mongodb connected you should see the terminal say "Server running on port 3000" and "Connected to MongoDB"
 
 ### 5. View the application
 To view the application, paste http://localhost:3000 into your browser
