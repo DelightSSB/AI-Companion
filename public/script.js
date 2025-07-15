@@ -1,6 +1,69 @@
 const chatLog = document.getElementById("chat-log");
 const sendBtn = document.getElementById("send-btn");
 const textarea = document.getElementById("user-input");
+let activeChatID = null;
+let activePFP = null;
+
+//Immediately attempt to load chats when the DOM elements are available
+window.addEventListener("DOMContentLoaded", fetchChats);
+
+async function fetchChats() {
+  try {
+    const res = await fetch("/chat");
+    const chats = await res.json();
+
+    // Creates chat and adds delete button
+    chats.forEach(c => {
+      const li = document.createElement("li");
+      li.dataset.id = c._id;
+
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = c.name;
+      nameSpan.style.flex = "1";
+      nameSpan.addEventListener("click", () => loadChat(c));
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "❌";
+      delBtn.style.marginLeft = "10px";
+      delBtn.style.background = "none";
+      delBtn.style.border = "none";
+      delBtn.style.cursor = "pointer";
+      delBtn.style.color = "red";
+      delBtn.addEventListener("click", async (e) => {
+        e.stopPropagation(); 
+        const res = await fetch(`/chat/${c._id}`, { method: "DELETE" });
+        if (res.ok) li.remove();
+      });
+
+      li.style.display = "flex";
+      li.style.alignItems = "center";
+      li.appendChild(nameSpan);
+      li.appendChild(delBtn);
+      chatList.appendChild(li);
+
+    });
+  } catch (err) {
+    console.error("Failed to load chats:", err);
+  }
+}
+
+//Takes aformentioned loaded chats and puts them in the sidebar to be accessed
+function loadChat(chat) {
+  activePFP = chat.profilePic
+  activeChatID = chat._id;
+  chatLog.innerHTML = "";
+
+  const title = document.getElementById("title");
+  title.textContent = chat.name;
+  // const container = document.getElementById("chatbox-container");
+  // container.prepend(title);
+
+  chat.messages.forEach(msg => {
+    addMessage(msg.role === "user" ? "user" : "ai", msg.content, chat.profilePic);
+  });
+
+  chatScreen.classList.remove("hidden");
+}
 
 
 //sidebar collapse
@@ -148,28 +211,23 @@ createBtn.addEventListener("click", async () => {
   newLi.textContent = aiName;
   chatList.appendChild(newLi);
 
-  //Show name
-  const box = document.getElementById("chatbox-container")
-  const title = document.createElement("h2")
+  const title = document.getElementById("title")
   title.innerHTML = aiName;
 
-  box.prepend(title)
 
-  // Show chat screen and hide modal
   modalOverlay.classList.add("hidden");
   chatScreen.classList.remove("hidden");
 
-  // Clear previous messages and reset
-  chatLog.innerHTML = "";
-  // Add typing message while waiting for DB confirmation
 
+  chatLog.innerHTML = "";
+activePFP = selectedProfilePic.src
   // Add typing message while waiting for DB confirmation
-addMessage("ai", "typing", selectedProfilePic.src);
+addMessage("ai", "typing", activePFP);
 
 const newChat = {
   name: aiName,
   personalityTraits: selectedPersonality,
-  profilePic: selectedProfilePic.src,
+  profilePic: activePFP,
   sex: selectedSex,
   messages: []
 };
@@ -184,13 +242,14 @@ try {
   const data = await res.json();
 
   // Replace typing with actual message
+  activeChatID = data._id
   document.getElementById("typing-message")?.remove();
-  addMessage("ai", "Ask me anything!", selectedProfilePic.src);
-  console.log("✅ Chat saved:", data);
+  addMessage("ai", data.reply, activePFP);
+  console.log("Chat saved:", data);
 } catch (err) {
-  console.error("❌ Failed to save chat:", err);
+  console.error("Failed to save chat:", err);
   document.getElementById("typing-message")?.remove();
-  addMessage("ai", "ERROR: Something went wrong while creating the chat.", selectedProfilePic.src);
+  addMessage("ai", "ERROR: Something went wrong while creating the chat.", activePFP);
 }
 
 
@@ -232,9 +291,9 @@ try {
 //   });
 
 //   const data = await res.json();
-//   console.log("✅ Chat saved:", data);
+//   console.log("Chat saved:", data);
 // } catch (err) {
-//   console.error("❌ Failed to save chat:", err);
+//   console.error("Failed to save chat:", err);
 // }
 
   resetModal();
@@ -253,16 +312,14 @@ function resetModal() {
     availableBox.appendChild(span);
   });
 
-  img.src = "";
+  previewImg.src = "";
+  previewImg.style.display = "none";
   selectedProfilePic = {
     src: "",
     offsetX: 0,
     offsetY: 0,
     scale: 1
   };
-
-  selectBtn.disabled = false;
-  selectBtn.textContent = "OK";
 }
 
 
@@ -278,25 +335,25 @@ textarea.addEventListener("keydown", async (e) => {
         const msg = textarea.value.trim();
         if (!msg) return;
 
-        addMessage("user", msg);
-        addMessage("ai", "typing");
+        addMessage("user", msg,);
+        // addMessage('ai', 'T e s t  M e s s a g e', activePFP)
+        addMessage("ai", "typing", activePFP);
 
         try {
         const res = await fetch("/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: msg })
+            body: JSON.stringify({ message: msg, chatId: activeChatID })
         });
 
         const data = await res.json();
-        console.log("Chat created and saved to mongo" + data._id)
 
         document.getElementById("typing-message")?.remove();
-        addMessage("ai", data.reply);
+        addMessage("ai", data.reply, activePFP);
         } catch (err) {
         console.error("Error:", err);
         document.getElementById("typing-message")?.remove();
-        addMessage("ai", "ERROR: Something went wrong with my response :(");
+        addMessage("ai", "ERROR: Something went wrong with my response :(", activePFP);
         }
   }
 });
@@ -306,26 +363,26 @@ sendBtn.addEventListener("click", async () => {
   if (!msg) return;
 
   addMessage("user", msg);
-  addMessage("ai", "typing");
+  // addMessage('ai', 'T e s t  M e s s a g e', activePFP)
+  addMessage("ai", "typing", activePFP);
+
 
   try {
     const res = await fetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: msg })
+      body: JSON.stringify({ message: msg, chatId: activeChatID })
     });
 
     const data = await res.json();
 
-    // Remove the typing bubble
     document.getElementById("typing-message")?.remove();
 
-    addMessage("ai", data.reply);
+    addMessage("ai", data.reply, activePFP);
   } catch (err) {
     console.error("Error:", err);
     const typingBubble = document.getElementById("typing-message");
     if (typingBubble) typingBubble.remove();
-
     addMessage("ai", "ERROR: Something went wrong with my response :(");
   }
 });
