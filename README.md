@@ -11,6 +11,7 @@ This is a full-stack AI companion web application where users can create persona
 - Modal popup to create a new AI companion (with personality tags, name, profile picture)
 - Profile picture preview and validation
 - AI chat powered by OpenAI (GPT-3.5/4)
+- Aforementioned AI chat implemented with personality and context to the conversation.
 - Messages stored and retrieved using MongoDB
 - Custom UI with floating chat window, chat bubbles, scroll behavior, and theme
 
@@ -68,14 +69,13 @@ To view the application, paste http://localhost:3000 into your browser
 
 ## Notes
 - You MUST have Node.js and npm installed.
-- This app currently stores chat objects, but does not persist message history between sessions yet.
-- While the AI is connected and will give a response. It currently does not have context that is taken from the popup modal. It doesn't have personality yet.
-- The app does not yet use authentication — all chats are anonymous and local.
+- The applicationn does have storage based on the database, but unless you connect to the database on each machine you use, it is only local
 
-## CURRENT KNOWN ISSUES
-- Issues with formatting the user message when message gets too long
-- AI response profile picture changes to default picture when it responds (This is due to lack of ai context)
-- Sidebar chat selection is not implemented yet.
+## Next Steps
+- Add a delete popup modal that prompts an "Are you sure?" script before deleting a chat
+- Allow for the user to have a profile that will include attributes about them that the ai and refer to
+- Implement authentification
+
 
 LICENSE - MIT
 
